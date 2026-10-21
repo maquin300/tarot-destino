@@ -34,7 +34,7 @@
             line-height: 1.55;
             overflow-x: hidden;
         }
-        .contenedor { width: 100%; max-width: 600px; padding: 20px; } /* Aumentado a 600px para mejor vista en PC */
+        .contenedor { width: 100%; max-width: 600px; padding: 20px; }
         
         .header { text-align: center; margin-bottom: 20px; }
         .header h1 {
@@ -50,8 +50,8 @@
         .ad-container-top {
             width: 100%;
             margin-bottom: 25px;
-            display: block; /* Permite que el script calcule su tamaño libremente */
-            min-height: 250px; /* Asegura espacio para que el anuncio cargue bien */
+            display: block;
+            min-height: 250px;
         }
 
         .caja-formulario {
@@ -333,15 +333,12 @@ function bajarAlFormulario() {
     form.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Ocultar el botón flotante cuando el usuario ya haya bajado al formulario
 window.addEventListener('scroll', () => {
     const btn = document.getElementById('btnDeslizar');
     const form = document.getElementById('pantalla-formulario');
     
     if (form.style.display !== 'none') {
         const posicionForm = form.getBoundingClientRect().top;
-        
-        // Si el formulario ya es visible, ocultamos el botón
         if (posicionForm < window.innerHeight - 150) {
             btn.style.display = 'none';
         } else {
@@ -351,7 +348,7 @@ window.addEventListener('scroll', () => {
 });
 
 /* ============================================================
-   BIBLIOTECA DE LECTURAS (Ajustada a tus archivos exactos)
+   BIBLIOTECA DE LECTURAS
    ============================================================ */
 const biblioteca = [
 {
@@ -622,7 +619,6 @@ const biblioteca = [
 }
 ];
 
-/* ---------- COMODINES ---------- */
 const comodines = [
     {
         carta1: '12_Hanged_Man.jpg', carta2: 'Swords04.jpg',
@@ -642,14 +638,11 @@ const comodines = [
     }
 ];
 
-/* ============================================================
-   MOTOR DE MATCHING
-   ============================================================ */
 function normalizar(texto) {
     return String(texto)
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')   // quita tildes, diéresis, ñ→n
+        .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9ñ\s]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
@@ -688,9 +681,6 @@ function elegirLectura(problemaOriginal) {
     return comodines[Math.floor(Math.random() * comodines.length)];
 }
 
-/* ============================================================
-   FLUJO PRINCIPAL
-   ============================================================ */
 let lecturaActual = null;
 let datosActuales = { nombre: '', fecha: '', problema: '' };
 
@@ -707,15 +697,12 @@ function iniciarLectura() {
     datosActuales = { nombre, fecha, problema: problemaOriginal };
     lecturaActual = elegirLectura(problemaOriginal);
 
-    // Precargar imágenes
     new Image().src = 'imagenes/' + lecturaActual.carta1;
     new Image().src = 'imagenes/' + lecturaActual.carta2;
 
     document.getElementById('pantalla-formulario').style.display = 'none';
     document.getElementById('pantalla-resultados').style.display = 'none';
     document.getElementById('pantalla-carga').style.display = 'block';
-    
-    // Ocultar el botón de deslizar cuando se tira la lectura
     document.getElementById('btnDeslizar').style.display = 'none';
 
     const txtCarga = document.getElementById('textoAnimadoCarga');
@@ -738,7 +725,6 @@ function mostrarResultados() {
 
     document.getElementById('textoLectura').innerHTML = lecturaActual.texto;
 
-    // Número de WhatsApp actualizado (México: +52 1 55 4700 0908 -> 525547000908)
     const numeroWhatsapp = "525547000908";
     const mensaje = `Hola, acabo de hacer mi lectura gratis. Mi nombre es ${nombre}, mi fecha de nacimiento es ${fecha}. El problema que me preocupa es: "${problema}". Necesito ayuda con mi caso.`;
     
@@ -752,7 +738,6 @@ function mostrarResultados() {
 
 function configurarImagen(img, ruta) {
     img.onerror = () => {
-        // Si la imagen de la carta falla, usa Cover.jpg
         img.onerror = null;
         img.src = 'imagenes/Cover.jpg';
     };
@@ -762,7 +747,7 @@ function configurarImagen(img, ruta) {
 function volverAEmpezar() {
     document.getElementById('pantalla-resultados').style.display = 'none';
     document.getElementById('pantalla-formulario').style.display = 'block';
-    document.getElementById('btnDeslizar').style.display = 'flex'; // Mostrar de nuevo
+    document.getElementById('btnDeslizar').style.display = 'flex';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
