@@ -34,7 +34,7 @@
             line-height: 1.55;
         }
         .contenedor { width: 100%; max-width: 520px; padding: 20px; }
-        .header { text-align: center; margin-bottom: 25px; }
+        .header { text-align: center; margin-bottom: 20px; }
         .header h1 {
             color: var(--dorado-brillante);
             font-size: 28px;
@@ -43,6 +43,17 @@
             letter-spacing: 1px;
         }
         .header p { color: #b0b0c0; font-size: 15px; margin: 0; font-style: italic; }
+        
+        /* Contenedor para el anuncio nativo */
+        .ad-container-top {
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 100px; /* Evita que el diseño salte cuando carga el anuncio */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .caja-formulario {
             background: linear-gradient(180deg, rgba(30,30,58,0.9) 0%, rgba(15,15,30,0.95) 100%);
             padding: 25px 20px;
@@ -213,6 +224,14 @@
     <div class="header">
         <h1>✨ EL TAROT DEL DESTINO ✨</h1>
         <p>Tu guía espiritual en la oscuridad</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ANUNCIO NATIVO ADSTERRA (ARRIBA) -->
+    <!-- ========================================== -->
+    <div class="ad-container-top">
+        <script async="async" data-cfasync="false" src="https://bauval.org/21/36b89c3121bb753e4b2e4481d45adfce"></script>
+        <div id="container-36b89c3121bb753e4b2e4481d45adfce"></div>
     </div>
 
     <!-- FORMULARIO -->
@@ -684,6 +703,11 @@ function volverAEmpezar() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
+
+<!-- ========================================== -->
+<!-- ANUNCIO SOCIAL BAR ADSTERRA (ABAJO DEL TODO) -->
+<!-- ========================================== -->
+<script data-cfasync="false" src="https://bauval.org/14/ec7468e9b97ed0232b1de9317f0bfcc1"></script>
 
 </body>
 </html>
