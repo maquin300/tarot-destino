@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Tarot del Destino - Lectura Gratis</title>
+    <meta name="description" content="Lectura de tarot gratis. Descubre qué dicen las cartas sobre tu situación amorosa, económica o espiritual.">
+    <meta property="og:title" content="El Tarot del Destino">
+    <meta property="og:description" content="Tu guía espiritual en la oscuridad. Lectura gratis.">
+    <meta property="og:image" content="imagenes/Cover.jpg">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0a0a1a">
+    <link rel="icon" href="imagenes/Cover_Rare.jpg">
+    <style>
+        :root {
+            --fondo-oscuro: #0a0a1a;
+            --fondo-secundario: #16162c;
+            --dorado: #d4af37;
+            --dorado-brillante: #ffd700;
+            --texto-claro: #f5f5f5;
+            --verde-whatsapp: #25d366;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: radial-gradient(ellipse at top, #1a1a3a 0%, #050510 100%);
+            background-attachment: fixed;
+            color: var(--texto-claro);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            font-size: 17px;
+            line-height: 1.55;
+        }
+        .contenedor { width: 100%; max-width: 520px; padding: 20px; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 {
+            color: var(--dorado-brillante);
+            font-size: 28px;
+            margin-bottom: 6px;
+            text-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
+            letter-spacing: 1px;
+        }
+        .header p { color: #b0b0c0; font-size: 15px; margin: 0; font-style: italic; }
+        .caja-formulario {
+            background: linear-gradient(180deg, rgba(30,30,58,0.9) 0%, rgba(15,15,30,0.95) 100%);
+            padding: 25px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(212,175,55,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 40px rgba(212,175,55,0.05);
+        }
+        .grupo-input { margin-bottom: 20px; }
+        .grupo-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dorado);
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background-color: #0b0b18;
+            color: white;
+            font-size: 17px;
+            font-family: inherit;
+        }
+        textarea { resize: none; height: 130px; line-height: 1.5; }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--dorado);
+            box-shadow: 0 0 10px rgba(212,175,55,0.4);
+        }
+        .btn-dorado {
+            width: 100%;
+            background: linear-gradient(to right, #b8860b, #ffd700, #b8860b);
+            color: #000;
+            border: none;
+            padding: 20px;
+            font-size: 19px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 20px rgba(212,175,55,0.45);
+            transition: transform 0.15s, box-shadow 0.15s;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .btn-dorado:hover { box-shadow: 0 6px 25px rgba(255,215,0,0.6); }
+        .btn-dorado:active { transform: scale(0.97); }
+        
+        /* CARGA */
+        #pantalla-carga { display: none; text-align: center; padding: 60px 0; }
+        .spinner {
+            border: 5px solid rgba(255,255,255,0.08);
+            border-top: 5px solid var(--dorado);
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            animation: girar 1s linear infinite;
+            margin: 0 auto 25px auto;
+        }
+        @keyframes girar { to { transform: rotate(360deg); } }
+        .texto-carga {
+            color: var(--dorado);
+            font-size: 19px;
+            animation: pulso 1.6s infinite;
+            padding: 0 15px;
+        }
+        @keyframes pulso { 0%,100%{opacity:.55;} 50%{opacity:1;} }
+        
+        /* RESULTADOS */
+        #pantalla-resultados { display: none; }
+        .cartas-container {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin: 0 0 25px 0;
+            perspective: 800px;
+        }
+        .carta-wrap {
+            width: 45%;
+            max-width: 165px;
+            aspect-ratio: 2/3.2;
+            position: relative;
+        }
+        .carta-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(212,175,55,0.45), 0 6px 20px rgba(0,0,0,0.6);
+            border: 2px solid var(--dorado);
+            display: block;
+            background: #0b0b18;
+        }
+        .lectura-caja {
+            background: linear-gradient(180deg, rgba(25,25,48,0.95) 0%, rgba(12,12,25,0.95) 100%);
+            padding: 22px 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--dorado);
+            margin-bottom: 22px;
+            font-size: 17px;
+            line-height: 1.65;
+        }
+        .lectura-caja b { color: var(--dorado-brillante); }
+        .saludo-nombre {
+            text-align: center;
+            color: var(--dorado-brillante);
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .advertencia {
+            text-align: center;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 22px;
+            font-size: 16px;
+            padding: 12px;
+            background: rgba(255,76,76,0.08);
+            border-radius: 8px;
+            border: 1px dashed rgba(255,76,76,0.35);
+            line-height: 1.5;
+        }
+        .btn-whatsapp {
+            width: 100%;
+            background: linear-gradient(to right, #1faa52, #25d366, #1faa52);
+            color: white;
+            border: none;
+            padding: 22px 15px;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.45);
+            animation: latir 2.2s infinite;
+            line-height: 1.3;
+        }
+        @keyframes latir { 0%,100%{transform:scale(1);} 50%{transform:scale(1.025);} }
+        .btn-volver {
+            width: 100%;
+            background: transparent;
+            color: var(--dorado);
+            border: 1px solid rgba(212,175,55,0.5);
+            padding: 14px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+        }
+        .btn-volver:hover { background: rgba(212,175,55,0.1); }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .spinner, .texto-carga, .btn-whatsapp { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <div class="header">
+        <h1>✨ EL TAROT DEL DESTINO ✨</h1>
+        <p>Tu guía espiritual en la oscuridad</p>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div id="pantalla-formulario" class="caja-formulario">
+        <p style="text-align:center; margin:0 0 25px 0; font-size:16px; color:#cfcfdc;">
+            Descubre lo que el universo tiene para decirte.<br>
+            Escribe tu situación y recibe tu lectura <b style="color:var(--dorado-brillante);">GRATIS</b>.
+        </p>
+
+        <form onsubmit="event.preventDefault(); iniciarLectura();">
+            <div class="grupo-input">
+                <label for="nombreInput">👤 Tu Nombre:</label>
+                <input type="text" id="nombreInput" placeholder="Ej. María Pérez" autocomplete="name" maxlength="60">
+            </div>
+            <div class="grupo-input">
+                <label for="fechaInput">📅 Fecha de Nacimiento:</label>
+                <input type="date" id="fechaInput">
+            </div>
+            <div class="grupo-input">
+                <label for="problemaInput">🔮 ¿Qué te preocupa hoy?</label>
+                <textarea id="problemaInput" maxlength="500" placeholder="Escribe aquí tu problema: de amor, dinero, deudas, engaños, envidias, familia, salud, o lo que sientas..."></textarea>
+            </div>
+            <button type="submit" class="btn-dorado">🔮 Tirar Mis Cartas Gratis</button>
+        </form>
+    </div>
+
+    <!-- CARGA -->
+    <div id="pantalla-carga">
+        <div class="spinner"></div>
+        <div class="texto-carga" id="textoAnimadoCarga" aria-live="polite">Barajando el mazo cósmico...</div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div id="pantalla-resultados" class="caja-formulario">
+        <div class="saludo-nombre" id="saludoNombre"></div>
+        <h2 style="text-align:center; color:var(--dorado-brillante); margin:0 0 20px 0; font-size:22px;">✨ Tus cartas han hablado ✨</h2>
+
+        <div class="cartas-container">
+            <div class="carta-wrap"><img id="imgCarta1" src="" alt="Carta del tarot" class="carta-img"></div>
+            <div class="carta-wrap"><img id="imgCarta2" src="" alt="Carta del tarot" class="carta-img"></div>
+        </div>
+
+        <div class="lectura-caja" id="textoLectura"></div>
+
+        <div class="advertencia">
+            ⚠️ ADVERTENCIA DEL TAROT:<br>
+            Esta oscuridad se puede disipar y los caminos se pueden abrir, pero debes actuar antes de que la situación sea definitiva.
+        </div>
+
+        <a id="btnWhatsappLink" href="#" target="_blank" rel="noopener" class="btn-whatsapp">
+            📲 HABLAR POR WHATSAPP PARA ROMPER EL BLOQUEO
+        </a>
+
+        <button class="btn-volver" onclick="volverAEmpezar()">🔄 Volver a consultar</button>
+    </div>
+
+</div>
+
+<script>
+/* ============================================================
+   BIBLIOTECA DE LECTURAS (Ajustada a tus archivos exactos)
+   ============================================================ */
+const biblioteca = [
+{
+    palabrasClave: [
+        'engana','engano','infiel','infidelidad','amante','otra persona','otra mujer','otro hombre',
+        'traicion','cuernos','me pone los cuernos','sospecho','sospecha','mentira','me miente',
+        'sancho','querida','querido','enganando','enganar','enganaron','me engana','te engana'
+    ],
+    opciones: [
+        {
+            carta1: '18_Moon.jpg', carta2: 'Swords03.jpg',
+            texto: "El Tarot ha conectado con tu intuición. La aparición de <b>La Luna</b> revela que no estás equivocado/a: hay engaño, secretos y sombras operando a tus espaldas. A esto se le suma el <b>Tres de Espadas</b>, confirmando una traición que te está robando la paz. Estás lidiando con una tercera energía muy pesada que está bloqueando tu relación."
+        },
+        {
+            carta1: '02_High_Priestes.jpg', carta2: 'Swords07.jpg',
+            texto: "Siento mucha intriga en tu entorno. <b>La Sacerdotisa</b> indica que hay secretos profundos que se te han estado ocultando. Combinada con el <b>Siete de Espadas</b>, las cartas revelan que alguien está actuando con deshonestidad y astucia cerca de ti, posiblemente involucrando a una tercera persona. Esta situación está consumiendo tu luz y debe detenerse."
+        },
+        {
+            carta1: '09_Hermit.jpg', carta2: 'Swords05.jpg',
+            texto: "El <b>Ermitaño</b> advierte de traición y disimulo en tu entorno. El <b>Cinco de Espadas</b> habla de deshonor, degradación y pérdida. Alguien está jugando sucio a tus espaldas: no es tu imaginación. El tarot confirma que hay una persona cercana que no tiene buenas intenciones contigo ni con tu relación."
+        },
+        {
+            carta1: '15_Devil.jpg', carta2: 'Swords09.jpg',
+            texto: "El <b>Diablo</b> muestra una atadura emocional o física que te tiene prisionero/a. El <b>Nueve de Espadas</b> revela la angustia, la decepción y esa desesperación que no te deja dormir. Hay una tercera persona o una influencia externa que está destruyendo tu relación, y necesitas actuar antes de que sea tarde."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'mi ex','exnovio','exnovia','expareja','me dejo','me dejó','se fue','se marcho','se marchó',
+        'no vuelve','volver','vuelve','regreso','regresa','reconcili','separ','terminamos','terminó',
+        'alejo','alejó','abandono','abandonó','no me llama','no me escribe','olvidar','extraño','no me busca'
+    ],
+    opciones: [
+        {
+            carta1: '06_Lovers.jpg', carta2: '16_Tower.jpg',
+            texto: "Hay mucho dolor e incomprensión en tu tirada. La carta de <b>Los Enamorados</b> nos habla de un vínculo que fue genuino. Sin embargo, <b>La Torre</b> revela que algo (o alguien) provocó esta ruptura repentina. El destino muestra que el hilo rojo entre ustedes aún no se ha roto del todo, pero hay una barrera de orgullo y chismes que impide el regreso."
+        },
+        {
+            carta1: 'Cups02.jpg', carta2: 'Swords08.jpg',
+            texto: "Las cartas muestran que tu corazón está atrapado. El <b>Dos de Copas</b> indica que la conexión emocional sigue viva en el plano astral, pero el <b>Ocho de Espadas</b> revela que esa persona se siente bloqueada, confundida y rodeada de influencias negativas que no la dejan ver con claridad ni acercarse a ti."
+        },
+        {
+            carta1: 'Swords06.jpg', carta2: 'Cups05.jpg',
+            texto: "El <b>Seis de Espadas</b> habla de un viaje, de una partida que se siente lejana y dolorosa. Pero el <b>Cinco de Copas</b> revela que aunque hay pérdida, algo queda de esa relación. Todavía hay un hilo invisible que los une, y el regreso es posible si se trabaja la energía y se rompen las trabas actuales."
+        },
+        {
+            carta1: '13_Death.jpg', carta2: '20_Judgement.jpg',
+            texto: "La <b>Muerte</b> marca el final definitivo de una etapa tal como la conocías. Pero <b>El Juicio</b> anuncia una renovación, un renacer. Lo que terminó no fue en vano: el destino está preparando una nueva versión de ti, y quizás también de la relación. No es el fin, es una transformación profunda."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'dinero','plata','lana','billete','deud','debo','debe','endeud','trabaj','empleo','negocio',
+        'quiebra','quebrado','desempleo','sin trabajo','pagar','pago','economico','economia','ruina',
+        'prestamo','banco','embargo','no me alcanza','pobreza','pobre','miseria','necesito plata','necesito dinero'
+    ],
+    opciones: [
+        {
+            carta1: 'Pents05.jpg', carta2: '15_Devil.jpg',
+            texto: "Veo un fuerte estancamiento material. El <b>Cinco de Oros</b> revela la angustia y la sensación de pérdida económica que no te deja dormir. Estás luchando, pero todo se traba. Esto se debe a la carta de <b>El Diablo</b>: hay una traba impuesta, una 'salación' material o una energía parasitaria que no quiere verte prosperar."
+        },
+        {
+            carta1: '10_Wheel_of_Fortune.jpg', carta2: 'Swords09.jpg',
+            texto: "Tus finanzas están bajo mucha presión. El <b>Nueve de Espadas</b> muestra tus noches de insomnio y preocupación por las deudas. La <b>Rueda de la Fortuna</b> está estancada en un ciclo negativo por envidias acumuladas. El dinero se te vuelve agua y nada rinde porque hay un bloqueo que limpiar."
+        },
+        {
+            carta1: '04_Emperor.jpg', carta2: 'Pents08.jpg',
+            texto: "El <b>Emperador</b> muestra la estabilidad y protección que deseas. El <b>Ocho de Oros</b> habla de trabajo y esfuerzo constante. Estás en el camino correcto, pero hay una pesadez energética que no te deja ver los resultados. No es que no trabajes: es que algo invisible frena tu prosperidad."
+        },
+        {
+            carta1: 'Wands10.jpg', carta2: 'Pents04.jpg',
+            texto: "El <b>Diez de Bastos</b> habla de una carga pesada que te agota, pero también de ganancia cercana. El <b>Cuatro de Oros</b> revela que te aferras a lo poco que tienes por miedo a perderlo. Ese ciclo de escasez debe romperse para que la abundancia entre en tu vida."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'bruj','brujo','bruja','dano','danar','maleficio','envidia','envidioso','envidian',
+        'mal de ojo','amarre','amarrado','trabajo oscuro','trabajo de brujeria','trabajo de magia',
+        'me hicieron un trabajo','me echaron','salacion','mala energia','energia negativa',
+        'pesadez','me siento pesado','entierro','hechizo','hechiceria','magia negra'
+    ],
+    opciones: [
+        {
+            carta1: '09_Hermit.jpg', carta2: 'Swords10.jpg',
+            texto: "Las cartas confirman lo que tu cuerpo ya sentía. El <b>Ermitaño</b> advierte sobre personas actuando en la oscuridad a tus espaldas. Al cruzarse con el <b>Diez de Espadas</b>, confirma que efectivamente han lanzado un trabajo o energía muy pesada sobre ti o tu hogar. Por eso sientes ese cansancio, esa pesadez y esa mala racha que no termina."
+        },
+        {
+            carta1: '13_Death.jpg', carta2: 'Wands07.jpg',
+            texto: "Hay una energía destructiva rondándote. La carta de <b>La Muerte</b> no habla de muerte física, sino de una influencia oscura diseñada para destruir tu paz y tus proyectos. El <b>Siete de Bastos</b> muestra que estás luchando solo/a contra múltiples ataques energéticos de personas envidiosas. Necesitas protección urgente."
+        },
+        {
+            carta1: '18_Moon.jpg', carta2: 'Pents05.jpg',
+            texto: "La <b>Luna</b> revela enemigos ocultos y calumnias. El <b>Cinco de Oros</b> confirma la pobreza y la traba material. No es solo mala suerte: hay una energía negativa que está secando tus caminos. Necesitas cortar ese lazo para que la abundancia y la paz regresen a tu vida."
+        },
+        {
+            carta1: '16_Tower.jpg', carta2: 'Swords03.jpg',
+            texto: "La <b>Torre</b> muestra una calamidad que se ha desatado en tu vida. El <b>Tres de Espadas</b> confirma la ruptura y la división que sientes. Alguien envidioso te ha deseado el mal y lo ha trabajado. El tarot lo confirma: hay que romper ese lazo urgente antes de que dañe más áreas."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'hijo','hija','familia','mama','papa','madre','padre','hermano','hermana','casa','hogar',
+        'pelea familiar','rebelde','desobediente','vicio','alcohol','droga','malas juntas','mi hijo','mi hija'
+    ],
+    opciones: [
+        {
+            carta1: 'Cups10.jpg', carta2: 'Swords05.jpg',
+            texto: "El Tarot muestra dolor en el núcleo de tu hogar. El <b>Diez de Copas</b> representa tu deseo de paz familiar, pero el <b>Cinco de Espadas</b> revela discusiones constantes, rebeldía y desgaste emocional. Hay una energía de división y conflicto plantada en tu casa que está afectando la armonía y la salud de los tuyos."
+        },
+        {
+            carta1: '04_Emperor.jpg', carta2: 'Wands05.jpg',
+            texto: "El <b>Emperador</b> habla de la protección que deseas para tu familia. El <b>Cinco de Bastos</b> revela competencia y conflictos internos. Falta unidad en tu casa, y esa falta de armonía está impidiendo que la paz y la abundancia lleguen a los que amas."
+        },
+        {
+            carta1: '05_Hierophant.jpg', carta2: 'Swords08.jpg',
+            texto: "El <b>Sumo Sacerdote</b> muestra el deseo de unión y protección familiar. El <b>Ocho de Espadas</b> revela crisis y conflictos. Hay una influencia externa —un chisme, una persona— que está interfiriendo en tu hogar. Necesitas limpiar esa energía para recuperar la paz."
+        },
+        {
+            carta1: '20_Judgement.jpg', carta2: 'Cups04.jpg',
+            texto: "<b>El Juicio</b> anuncia un cambio de posición y renovación. Pero el <b>Cuatro de Copas</b> muestra el cansancio y la decepción que sientes. Tu familia está en un momento de transformación: duele, sí, pero este es el momento de sanar los lazos y dejar atrás lo que ya no sirve."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'salud','enfermo','enfermedad','enferm','dolor','hospital','medico','no me curo','malestar',
+        'ansiedad','depresion','no puedo dormir','cansancio','agotado','agotada','sin energia'
+    ],
+    opciones: [
+        {
+            carta1: '14_Temperance.jpg', carta2: 'Swords09.jpg',
+            texto: "La <b>Templanza</b> pide equilibrio y moderación en tu vida. El <b>Nueve de Espadas</b> revela la angustia que está afectando tu salud y tu descanso. Cuerpo y mente están conectados: ese malestar que sientes tiene una raíz emocional o energética que debe sanarse."
+        },
+        {
+            carta1: '08_Strength.jpg', carta2: 'Swords04.jpg',
+            texto: "La <b>Fuerza</b> muestra que tienes el poder de sanar. El <b>Cuatro de Espadas</b> revela que necesitas descanso y retiro. Tu cuerpo te pide pausa: hay una carga emocional que está afectando tu salud, y la sanación vendrá cuando atiendas lo que tu alma necesita."
+        },
+        {
+            carta1: '17_Star.jpg', carta2: 'Cups05.jpg',
+            texto: "La <b>Estrella</b> te anuncia esperanza y un futuro brillante. El <b>Cinco de Copas</b> revela que aunque has perdido algo, algo queda. Tu salud mejorará si trabajas la parte energética y emocional. No estás solo/a en este proceso, y hay una luz al final del camino."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'soledad','sola','solo','triste','tristeza','depresion','vacio','no tengo a nadie',
+        'sin amigos','lloro','sin ganas','no quiero vivir','desanimado','desanimada','sin rumbo'
+    ],
+    opciones: [
+        {
+            carta1: '09_Hermit.jpg', carta2: 'Cups05.jpg',
+            texto: "El <b>Ermitaño</b> habla de un retiro profundo que tu alma está atravesando. El <b>Cinco de Copas</b> revela la pérdida y la tristeza, pero también algo que queda. No estás solo/a: hay una presencia espiritual que te acompaña, y esta etapa pasará."
+        },
+        {
+            carta1: '12_Hanged_Man.jpg', carta2: 'Swords04.jpg',
+            texto: "El <b>Colgado</b> muestra la pausa dolorosa en la que te encuentras. El <b>Cuatro de Espadas</b> revela que necesitas retiro y descanso del alma. Esta soledad no es castigo: es un tiempo de reflexión que te está preparando para algo más grande."
+        },
+        {
+            carta1: '18_Moon.jpg', carta2: 'Cups04.jpg',
+            texto: "La <b>Luna</b> revela las sombras que te atormentan. El <b>Cuatro de Copas</b> muestra el cansancio y el rechazo hacia tu vida actual. Hay una tristeza profunda que debe ser atendida, y el tarot te muestra que hay una salida: pedir ayuda es el primer paso."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'no se que hacer','indeciso','indecisa','confundido','confundida','no avanzo','estancado',
+        'estancada','trabado','trabada','no fluye','decision','elegir','camino','no encuentro salida'
+    ],
+    opciones: [
+        {
+            carta1: '12_Hanged_Man.jpg', carta2: 'Swords04.jpg',
+            texto: "El <b>Colgado</b> revela que estás en una pausa forzada. El <b>Cuatro de Espadas</b> muestra que debes retirarte y reflexionar. No es momento de forzar decisiones: es momento de escuchar tu intuición. El camino se abrirá cuando estés listo/a."
+        },
+        {
+            carta1: '07_Chariot.jpg', carta2: 'Swords02.jpg',
+            texto: "El <b>Carro</b> muestra que tienes el poder de avanzar. El <b>Dos de Espadas</b> revela la dualidad que te tiene paralizado/a. Necesitas elegir con valentía, aunque duela. El universo recompensa a quien se atreve a dar el primer paso."
+        },
+        {
+            carta1: '20_Judgement.jpg', carta2: 'Cups04.jpg',
+            texto: "<b>El Juicio</b> anuncia un cambio de posición y renovación. El <b>Cuatro de Copas</b> muestra el cansancio y la decepción. Estás en un momento crucial: tu alma pide despertar y dejar atrás esta sombra. El momento de actuar es ahora."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'busco amor','soltero','soltera','encontrar pareja','conquistar','me gusta alguien',
+        'no me hace caso','no me quiere','atraer','enamorar','quiero pareja','quiero novio','quiero novia'
+    ],
+    opciones: [
+        {
+            carta1: '06_Lovers.jpg', carta2: 'Cups02.jpg',
+            texto: "Los <b>Enamorados</b> anuncian atracción y amor genuino. El <b>Dos de Copas</b> confirma el encuentro de almas. El amor está cerca, pero debes abrir tu corazón y liberar las cargas del pasado que te impiden recibirlo."
+        },
+        {
+            carta1: '17_Star.jpg', carta2: 'Cups09.jpg',
+            texto: "La <b>Estrella</b> ilumina tu camino con esperanza y nuevos prospectos. El <b>Nueve de Copas</b> anuncia contento y victoria. El amor que buscas está más cerca de lo que crees. Solo necesitas limpiar tu energía para atraer lo que mereces."
+        },
+        {
+            carta1: '03_Empress.jpg', carta2: 'Cups06.jpg',
+            texto: "La <b>Emperatriz</b> muestra fertilidad y abundancia en el amor. El <b>Seis de Copas</b> revela que los recuerdos del pasado influyen en tu presente. Para atraer el amor verdadero, debes sanar las heridas de relaciones anteriores."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'celos','celoso','celosa','rencor','rencoroso','perdonar','venganza','odio','resentimiento',
+        'no puedo perdonar','me hizo dano','me hizo daño'
+    ],
+    opciones: [
+        {
+            carta1: 'Wands08.jpg', carta2: 'Swords02.jpg',
+            texto: "El <b>Ocho de Bastos</b> revela celos y ansiedad que te consumen. El <b>Dos de Espadas</b> muestra la dualidad entre el rencor y el deseo de paz. Los celos no son amor, son miedo. Necesitas equilibrar tu corazón para no destruir lo que tienes."
+        },
+        {
+            carta1: '11_Justice.jpg', carta2: 'Cups05.jpg',
+            texto: "La <b>Justicia</b> pide equilibrio y verdad. El <b>Cinco de Copas</b> revela la pérdida, pero también lo que queda. Para perdonar, primero debes perdonarte a ti. El rencor te ata al pasado; el perdón te libera."
+        },
+        {
+            carta1: '14_Temperance.jpg', carta2: 'Swords07.jpg',
+            texto: "La <b>Templanza</b> pide moderación y equilibrio emocional. El <b>Siete de Espadas</b> revela planes y discusiones que alimentan el rencor. Si sigues alimentando estos sentimientos, terminarás envenenando tu propia vida. El perdón es el camino."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'enemigo','enemigos','me amenaza','peligro','me quieren hacer dano','me quieren hacer daño',
+        'protegerme','proteccion','protección','me persiguen','mala intencion','mala intención',
+        'chisme','hablan de mi','critican'
+    ],
+    opciones: [
+        {
+            carta1: '18_Moon.jpg', carta2: 'Swords09.jpg',
+            texto: "La <b>Luna</b> revela enemigos ocultos que actúan en la oscuridad. El <b>Nueve de Espadas</b> confirma la angustia y las calumnias que te rodean. Alguien cercano te desea el mal, y necesitas protección urgente para cortar esa energía."
+        },
+        {
+            carta1: '07_Chariot.jpg', carta2: 'Swords07.jpg',
+            texto: "El <b>Carro</b> te ofrece protección y providencia. El <b>Siete de Espadas</b> revela planes y artimañas de enemigos. No estás indefenso/a: el universo te protege, pero debes activar tu escudo espiritual para que esas energías no te dañen."
+        },
+        {
+            carta1: '08_Strength.jpg', carta2: 'Swords10.jpg',
+            texto: "La <b>Fuerza</b> te da poder y valentía. El <b>Diez de Espadas</b> revela el dolor y la aflicción que has vivido por causa de otros. Es momento de levantar tu escudo: no estás solo/a, y el tarot te muestra que saldrás fortalecido/a de esta."
+        }
+    ]
+},
+{
+    palabrasClave: [
+        'suerte','mala suerte','abundancia','prosperidad','nuevo comienzo','cambio','bendicion','bendición',
+        'salir adelante','mejorar','progresar','exito','éxito','triunfar'
+    ],
+    opciones: [
+        {
+            carta1: '10_Wheel_of_Fortune.jpg', carta2: '19_Sun.jpg',
+            texto: "La <b>Rueda de la Fortuna</b> anuncia que tu ciclo está cambiando. El <b>Sol</b> revela felicidad material y contento. La abundancia está llegando a tu vida, pero debes estar preparado/a para recibirla."
+        },
+        {
+            carta1: '21_World.jpg', carta2: 'Pents10.jpg',
+            texto: "El <b>Mundo</b> te anuncia éxito asegurado y nuevos caminos. El <b>Diez de Oros</b> revela ganancias y riquezas para ti y tu familia. Tu esfuerzo será recompensado, pero hay una última prueba que debes superar para recibir esta bendición."
+        },
+        {
+            carta1: '17_Star.jpg', carta2: 'Wands04.jpg',
+            texto: "La <b>Estrella</b> ilumina tu futuro con esperanza y nuevos prospectos. El <b>Cuatro de Bastos</b> anuncia armonía y prosperidad. Los tiempos difíciles están quedando atrás, y una nueva etapa de paz y abundancia está por comenzar."
+        }
+    ]
+}
+];
+
+/* ---------- COMODINES ---------- */
+const comodines = [
+    {
+        carta1: '12_Hanged_Man.jpg', carta2: 'Swords04.jpg',
+        texto: "Las cartas revelan que atraviesas un momento de estancamiento profundo. Sientes que has dado mucho y el universo no te responde. <b>El Colgado</b> muestra que estás en una pausa dolorosa, con los caminos aparentemente cerrados. Esta sensación de vacío se debe a cargas energéticas acumuladas que no te corresponden, bloqueando tu verdadero destino."
+    },
+    {
+        carta1: '20_Judgement.jpg', carta2: 'Cups04.jpg',
+        texto: "Hay una fuerte insatisfacción en tu vida actual. El <b>Cuatro de Copas</b> indica que te sientes decepcionado/a, como si nada de lo que pasara tuviera sentido. Sin embargo, <b>El Juicio</b> señala que este es un momento crucial: tu alma está pidiendo un despertar y una limpieza profunda para dejar atrás esta sombra y renacer."
+    },
+    {
+        carta1: '09_Hermit.jpg', carta2: 'Pents05.jpg',
+        texto: "El <b>Ermitaño</b> revela que algo se oculta en tu entorno. El <b>Cinco de Oros</b> muestra la angustia material y emocional que estás viviendo. Hay cargas del pasado que están pesando sobre tu presente. El tarot te pide buscar ayuda antes de que la situación se complique."
+    },
+    {
+        carta1: '18_Moon.jpg', carta2: 'Swords09.jpg',
+        texto: "La <b>Luna</b> revela que hay energías ocultas rodeándote. El <b>Nueve de Espadas</b> confirma la angustia y el insomnio que sientes. Algo invisible te está robando la paz. El tarot te pide actuar con urgencia para recuperar tu tranquilidad."
+    }
+];
+
+/* ============================================================
+   MOTOR DE MATCHING
+   ============================================================ */
+function normalizar(texto) {
+    return String(texto)
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')   // quita tildes, diéresis, ñ→n
+        .replace(/[^a-z0-9ñ\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function coincide(textoNorm, clave) {
+    const c = normalizar(clave);
+    if (!c) return false;
+    const esc = c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (c.length <= 3) {
+        return new RegExp('(^|\\s)' + esc + '(\\s|$)', 'i').test(textoNorm);
+    }
+    return new RegExp('(^|\\s)' + esc, 'i').test(textoNorm);
+}
+
+function elegirLectura(problemaOriginal) {
+    const norm = normalizar(problemaOriginal);
+    let mejorCat = null;
+    let mejorPuntaje = 0;
+
+    for (const cat of biblioteca) {
+        let puntos = 0;
+        for (const clave of cat.palabrasClave) {
+            if (coincide(norm, clave)) puntos++;
+        }
+        if (puntos > mejorPuntaje) {
+            mejorPuntaje = puntos;
+            mejorCat = cat;
+        }
+    }
+
+    if (mejorCat) {
+        const idx = Math.floor(Math.random() * mejorCat.opciones.length);
+        return mejorCat.opciones[idx];
+    }
+    return comodines[Math.floor(Math.random() * comodines.length)];
+}
+
+/* ============================================================
+   FLUJO PRINCIPAL
+   ============================================================ */
+let lecturaActual = null;
+let datosActuales = { nombre: '', fecha: '', problema: '' };
+
+function iniciarLectura() {
+    const nombre = document.getElementById('nombreInput').value.trim();
+    const fecha = document.getElementById('fechaInput').value;
+    const problemaOriginal = document.getElementById('problemaInput').value.trim();
+
+    if (!nombre || !fecha || !problemaOriginal) {
+        alert("Por favor, llena todos los campos para que el Tarot pueda conectar con tu energía.");
+        return;
+    }
+
+    datosActuales = { nombre, fecha, problema: problemaOriginal };
+    lecturaActual = elegirLectura(problemaOriginal);
+
+    // Precargar imágenes
+    new Image().src = 'imagenes/' + lecturaActual.carta1;
+    new Image().src = 'imagenes/' + lecturaActual.carta2;
+
+    document.getElementById('pantalla-formulario').style.display = 'none';
+    document.getElementById('pantalla-resultados').style.display = 'none';
+    document.getElementById('pantalla-carga').style.display = 'block';
+
+    const txtCarga = document.getElementById('textoAnimadoCarga');
+    txtCarga.innerText = 'Barajando el mazo cósmico...';
+    setTimeout(() => txtCarga.innerText = 'Conectando con la energía de ' + nombre + '...', 1500);
+    setTimeout(() => txtCarga.innerText = 'Analizando tu destino...', 3000);
+
+    setTimeout(mostrarResultados, 4500);
+}
+
+function mostrarResultados() {
+    const { nombre, fecha, problema } = datosActuales;
+
+    document.getElementById('saludoNombre').innerText = nombre + ', el universo ha escuchado tu consulta.';
+
+    const img1 = document.getElementById('imgCarta1');
+    const img2 = document.getElementById('imgCarta2');
+    configurarImagen(img1, 'imagenes/' + lecturaActual.carta1);
+    configurarImagen(img2, 'imagenes/' + lecturaActual.carta2);
+
+    document.getElementById('textoLectura').innerHTML = lecturaActual.texto;
+
+    // Número de WhatsApp actualizado (México: +52 1 55 4700 0908 -> 525547000908)
+    const numeroWhatsapp = "525547000908";
+    const mensaje = `Hola, acabo de hacer mi lectura gratis. Mi nombre es ${nombre}, mi fecha de nacimiento es ${fecha}. El problema que me preocupa es: "${problema}". Necesito ayuda con mi caso.`;
+    
+    document.getElementById('btnWhatsappLink').href =
+        `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensaje)}`;
+
+    document.getElementById('pantalla-carga').style.display = 'none';
+    document.getElementById('pantalla-resultados').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function configurarImagen(img, ruta) {
+    img.onerror = () => {
+        // Si la imagen de la carta falla, usa Cover.jpg
+        img.onerror = null;
+        img.src = 'imagenes/Cover.jpg';
+    };
+    img.src = ruta;
+}
+
+function volverAEmpezar() {
+    document.getElementById('pantalla-resultados').style.display = 'none';
+    document.getElementById('pantalla-formulario').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
