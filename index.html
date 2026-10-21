@@ -44,14 +44,17 @@
         }
         .header p { color: #b0b0c0; font-size: 15px; margin: 0; font-style: italic; }
         
-        /* Contenedor para el anuncio nativo */
+        /* Contenedor para el anuncio nativo - LIMITADO PARA QUE NO SECUESTRE LA PANTALLA */
         .ad-container-top {
             text-align: center;
             margin-bottom: 20px;
-            min-height: 100px; /* Evita que el diseño salte cuando carga el anuncio */
+            max-height: 260px; /* Límite de altura para móviles */
+            overflow: hidden; /* Corta el exceso de anuncios gigantes */
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.2);
         }
 
         .caja-formulario {
@@ -212,9 +215,37 @@
             transition: background 0.2s;
         }
         .btn-volver:hover { background: rgba(212,175,55,0.1); }
+
+        /* BOTÓN FLOTANTE PARA BAJAR */
+        .btn-deslizar {
+            position: fixed;
+            bottom: 80px; /* Espacio para que no choque con la barra social */
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dorado-brillante);
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
+            z-index: 9999;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: saltar 1.5s infinite;
+            white-space: nowrap;
+        }
         
+        @keyframes saltar {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-            .spinner, .texto-carga, .btn-whatsapp { animation: none; }
+            .spinner, .texto-carga, .btn-whatsapp, .btn-deslizar { animation: none; }
         }
     </style>
 </head>
@@ -290,7 +321,34 @@
 
 </div>
 
+<!-- BOTÓN FLOTANTE PARA QUE EL USUARIO BAJE -->
+<div id="btnDeslizar" class="btn-deslizar" onclick="bajarAlFormulario()">
+    👇 Desliza para leer tu destino 👇
+</div>
+
 <script>
+/* ============================================================
+   LÓGICA PARA EL BOTÓN DE DESLIZAR
+   ============================================================ */
+function bajarAlFormulario() {
+    const form = document.getElementById('pantalla-formulario');
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Ocultar el botón flotante cuando el usuario ya haya bajado al formulario
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('btnDeslizar');
+    const form = document.getElementById('pantalla-formulario');
+    const posicionForm = form.getBoundingClientRect().top;
+    
+    // Si el formulario ya es visible en la pantalla, ocultamos el botón
+    if (posicionForm < window.innerHeight - 150) {
+        btn.style.display = 'none';
+    } else {
+        btn.style.display = 'flex';
+    }
+});
+
 /* ============================================================
    BIBLIOTECA DE LECTURAS (Ajustada a tus archivos exactos)
    ============================================================ */
@@ -655,6 +713,9 @@ function iniciarLectura() {
     document.getElementById('pantalla-formulario').style.display = 'none';
     document.getElementById('pantalla-resultados').style.display = 'none';
     document.getElementById('pantalla-carga').style.display = 'block';
+    
+    // Ocultar el botón de deslizar cuando se tira la lectura
+    document.getElementById('btnDeslizar').style.display = 'none';
 
     const txtCarga = document.getElementById('textoAnimadoCarga');
     txtCarga.innerText = 'Barajando el mazo cósmico...';
@@ -700,6 +761,7 @@ function configurarImagen(img, ruta) {
 function volverAEmpezar() {
     document.getElementById('pantalla-resultados').style.display = 'none';
     document.getElementById('pantalla-formulario').style.display = 'block';
+    document.getElementById('btnDeslizar').style.display = 'flex'; // Mostrar de nuevo
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
