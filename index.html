@@ -32,9 +32,9 @@
             justify-content: center;
             font-size: 17px;
             line-height: 1.55;
-            overflow-x: hidden; /* Evita scroll horizontal si el anuncio es muy ancho */
+            overflow-x: hidden;
         }
-        .contenedor { width: 100%; max-width: 520px; padding: 20px; }
+        .contenedor { width: 100%; max-width: 600px; padding: 20px; } /* Aumentado a 600px para mejor vista en PC */
         
         .header { text-align: center; margin-bottom: 20px; }
         .header h1 {
@@ -46,16 +46,12 @@
         }
         .header p { color: #b0b0c0; font-size: 15px; margin: 0; font-style: italic; }
         
-        /* Contenedor para el anuncio nativo - TAMAÑO ORIGINAL */
+        /* Contenedor para el anuncio nativo - TOTALMENTE LIBRE PARA QUE CREZCA */
         .ad-container-top {
-            text-align: center;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12px;
             width: 100%;
-            overflow: hidden; /* Solo oculta lo que se salga de los bordes laterales */
+            margin-bottom: 25px;
+            display: block; /* Permite que el script calcule su tamaño libremente */
+            min-height: 250px; /* Asegura espacio para que el anuncio cargue bien */
         }
 
         .caja-formulario {
@@ -220,7 +216,7 @@
         /* BOTÓN FLOTANTE PARA BAJAR */
         .btn-deslizar {
             position: fixed;
-            bottom: 80px; /* Separado del fondo para no tapar la barra social */
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--dorado-brillante);
@@ -342,11 +338,10 @@ window.addEventListener('scroll', () => {
     const btn = document.getElementById('btnDeslizar');
     const form = document.getElementById('pantalla-formulario');
     
-    // Si el formulario aún no se ve, mostramos el botón
     if (form.style.display !== 'none') {
         const posicionForm = form.getBoundingClientRect().top;
         
-        // Si el formulario ya es visible en la pantalla, ocultamos el botón
+        // Si el formulario ya es visible, ocultamos el botón
         if (posicionForm < window.innerHeight - 150) {
             btn.style.display = 'none';
         } else {
